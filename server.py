@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify
 import subprocess
-import re
 
 app = Flask(__name__)
 
@@ -29,9 +28,9 @@ def build_container():
     if not dockerfile_content or not image_name:
         return jsonify({'error': 'dockerfile content and image name are required'}), 400
 
-    # Write the Dockerfile content to a file
+    # Write the Dockerfile content to a file, ensuring newlines are preserved
     with open('Dockerfile', 'w') as dockerfile:
-        dockerfile.write(dockerfile_content)
+        dockerfile.write(dockerfile_content.replace("\\n", "\n"))
 
     # Use BuildKit to build the image
     result = subprocess.run([
